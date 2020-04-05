@@ -48,8 +48,8 @@ df_test_samples.dropna(inplace=True)
 
 frames = [df_train_samples, df_validation_samples]
 input = pd.concat(frames, sort=False)
-frames1 = [df_train_labels, df_validation_labels]
-data1 = pd.concat(frames1, sort=False)
+frames = [df_train_labels, df_validation_labels]
+data = pd.concat(frames, sort=False)
 
 #vectorizarea textului
 vectorizer = TfidfVectorizer(min_df=0.001, max_df=0.6, ngram_range=(1, 7))
