@@ -2,7 +2,7 @@
 Antrenarea unui model pe pasaje preluate de pe twitter pentru a clasifica orice text după dialect, român sau moldovenesc. Set de antrenare: 7757 de sample-uri. Set de validare: 2656 de sample-uri. Toate sample-ruile sunt preprocesate pentru a înlocui entitățile cu nume cu o etichetă specială: $NE$
 În train_samples fiecare linie conține pe prima coloană ID, iar pe a doua textul. În fișierul train_labels pe prima coloană este ID, iar pe a doua labelul, 1 pentru romană și 0 pentru moldovenească.
 
-#### Dependențe:
+#### Dependințe:
 * TfidfVectorizer din sklearn.feature_extraction.text
 * ComplementNB,MultinomialNB din sklearn.naive_bayes
 * KFold, GridSearchCV,cross_val_score din sklearn.model_selection
