@@ -132,19 +132,22 @@ print("accuracy :",logreg_cv.best_score_)
 ```
 Am încercat să găsesc parametri optimi cu ajutorul unui GridSearch,am obtinut f1_score de 0.664433155969404 și parameteri :(best parameters)  {'C': 1.0, 'penalty': 'l2'}
 După puțin research și câteva teste am ajuns la concluzia că parametri care au cea mai mare acuratețe [0.6766405984359061, 0.6990489130434783, 0.6838440111420613] sunt:
-##### 2.LogisticRegression(random_state=0, solver ='saga',penalty= 'elasticnet',l1_ratio=1)
-##### 1.LogisticRegression(C=1,penalty= 'l2')
+#### 2.LogisticRegression(random_state=0, solver ='saga',penalty= 'elasticnet',l1_ratio=1)
+#### 1.LogisticRegression(C=1,penalty= 'l2')
 
 ![](images/LRG.png)
 
-Comparație între clasificatorii încercați:
+#### Comparație între clasificatorii încercați:
 
 ![](images/comparison.png)
 
 ### 4.Voting classifier
 În final am decis să folosesc o metoda ensemble pentru a îmbunătăți performanța modelului folosind toți algoritmi de mai sus. Votarea este o tehnică de învățare ensemble în care sunt combinate predicțiile de la mai multe modele.
 ```
-VotingClassifier(estimators=[('cmp',ComplementNB(alpha = 0.1)), ('rnf', LogisticRegression(random_state=0, solver ='saga',penalty= 'elasticnet',l1_ratio=1)), ('svm', svm.SVC(kernel='linear', C=0.1,probability=True))], voting='hard')
+VotingClassifier(estimators=[('cmp',ComplementNB(alpha = 0.1)),
+                              ('rnf', LogisticRegression(random_state=0, solver ='saga',
+                                        penalty= 'elasticnet',l1_ratio=1)),
+                              ('svm', svm.SVC(kernel='linear', C=0.1,probability=True))], voting='hard')
 ```
 f1_score pe cele 3 folduri:
 [0.6766405984359061, 0.6990489130434783, 0.6838440111420613] 
