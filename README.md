@@ -61,9 +61,9 @@ Putem evalua modelul si cu cross_val_score( )
 ```
 cross_val_score(model, train_text, train_label)
 ```
-### Am încercat următorii clasificatori:
+### Am testat performanța următorilor clasificatori:
 ### 1.Naive Bayes folosind functia ComplementNB( )
-(complement naiv) este o implementare a algoritmului lui Bayes,este o adaptare optimizată a algoritmului naiv multinomial standard(MNB).Am păstrat parametrii cu valorile default,încercând să ajung la o valoare optimă a lui  alpha.
+Complement naiv este o implementare a algoritmului lui Bayes,este o adaptare optimizată a algoritmului naiv multinomial standard(MNB).Am păstrat parametrii cu valorile default,încercând să ajung la o valoare optimă a lui  alpha.
 ```
 scores_comp1.append(get_score(ComplementNB(alpha=0),train_text,train_label,test_text,test_label))
 
@@ -155,7 +155,7 @@ f1_score pe cele 3 folduri:
       
 
 ## Concluzie
-Datorită scorului mai mare am ales sa implementez:
+Datorită scorului mai mare am ales sa implementez și să testez, scorul fiind dat de kaggle următoarele modele:
 * Naive Bayes cu ComplementNB() -> acuratețe 0.69683
 * Voting classifier cu ComplementNB, Suport Vector Machine si LogisticRegression-> acuratețe 0.65851
 
