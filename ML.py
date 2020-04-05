@@ -61,7 +61,7 @@ test = vectorizer.transform(df_test_samples['text'])
 test1 = vectorizer.transform(df_validation_samples['text'])
 
 df_validation_labels['label'] =(df_validation_labels['label']).astype(int)
-data1['label'] = (data1['label']).astype(int)
+data['label'] = (data['label']).astype(int)
 digits = np.column_stack((df_train_samples['text'], df_train_labels['label']))
 
 #impart datele in 3 folduri
