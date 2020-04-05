@@ -11,8 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sn
 
-# load data
-#training data
+# citirea/preprocesarea datelor
+#datele de antrenare 
 from sklearn.neighbors import KNeighborsClassifier
 
 file = open('train_samples.txt', encoding="utf8")
@@ -24,7 +24,7 @@ df_train_samples['text'] = [row[1] for row in data]
 df_train_samples.dropna(inplace = True)
 df_train_labels = pd.read_csv('train_labels.txt', sep='\t', names=["id", "label"])
 
-#internal validation data
+#datele de validare 
 file = open('validation_samples.txt', encoding="utf8")
 data = [line.split('\t') for line in file.readlines()]
 
@@ -37,7 +37,7 @@ df_validation_labels = pd.read_csv('validation_labels.txt', sep='\t', names=["id
 print(df_validation_samples.shape)
 print(df_validation_labels.shape)
 
-#test data
+#datele de test
 file = open('test_samples.txt', encoding="utf8")
 data = [line.split('\t') for line in file.readlines()]
 
@@ -51,8 +51,7 @@ input = pd.concat(frames, sort=False)
 frames1 = [df_train_labels, df_validation_labels]
 data1 = pd.concat(frames1, sort=False)
 
-#scaling/vectorize
-
+#vectorizarea textului
 vectorizer = TfidfVectorizer(min_df=0.001, max_df=0.6, ngram_range=(1, 7))
 vectorizer.fit(input['text'])
 input = vectorizer.transform(input['text'])
@@ -63,12 +62,10 @@ test1 = vectorizer.transform(df_validation_samples['text'])
 
 df_validation_labels['label'] =(df_validation_labels['label']).astype(int)
 data1['label'] = (data1['label']).astype(int)
-
-
-
 digits = np.column_stack((df_train_samples['text'], df_train_labels['label']))
-kf = KFold(n_splits=3)
 
+#impart datele in 3 folduri
+kf = KFold(n_splits=3)
 # liste de scoruri
 scores_svm1 = []
 scores_svm2 = []
@@ -101,12 +98,15 @@ for train_i, test_i in kf.split(input1):
     scores_lrg2.append(get_score(LogisticRegression(random_state=0, solver='saga', penalty='elasticnet', l1_ratio=1), train_text, train_label, test_text, test_label))
     scores_svm1.append(get_score(svm.SVC(kernel='linear', C=0.1, probability=True), train_text, train_label, test_text, test_label))
     scores_svm2.append(get_score(svm.SVC(kernel='linear', C=1,probability=True), train_text, train_label, test_text, test_label))
-    scores_vt.append(get_score(VotingClassifier(estimators=[('cmp', ComplementNB(alpha=0.1)), ('rnf', LogisticRegression(random_state=0, solver='saga', penalty='elasticnet', l1_ratio=1)), ('svm', svm.SVC(kernel='linear', C=0.1, probability=True))], voting='hard'), train_text, train_label, test_text, test_label))
     scores_comp1.append(get_score(ComplementNB(alpha=1), train_text, train_label, test_text, test_label))
     scores_comp2.append(get_score(ComplementNB(alpha=0.1), train_text, train_label, test_text, test_label))
     scores_comp3.append(get_score(ComplementNB(alpha=0.4), train_text, train_label, test_text, test_label))
     # scores_comp3.append(get_score(ComplementNB(alpha=0), train_text, train_label, test_text, test_label))
     scores_comp4.append(get_score(MultinomialNB(alpha=0.1), train_text, train_label, test_text, test_label))
+    scores_vt.append(get_score(VotingClassifier(estimators=[('cmp', ComplementNB(alpha=0.1)),
+                                                            ('rnf', LogisticRegression(random_state=0, solver='saga', penalty='elasticnet', l1_ratio=1)), 
+                                                            ('svm', svm.SVC(kernel='linear', C=0.1, probability=True))], voting='hard'), 
+                               train_text, train_label, test_text, test_label))
 
 alpha = [0, 0.1, 0.4, 1]
 fold = [1, 2, 3]
@@ -141,7 +141,7 @@ plt.ylabel('f1_score')
 # Afiseaza figura
 plt.show()
 
-#ComplementNB vs MultinomialNB vs SVM vs LogisticRegression
+#ComplementNB vs SVM vs LogisticRegression
 plt.plot(fold, scores_comp2)
 plt.plot(fold, scores_svm1)
 plt.plot(fold, scores_lrg2)
@@ -150,6 +150,7 @@ plt.xlabel('fold')
 plt.ylabel('f1_score')
 plt.show()
 
+#gridSearch pentru optimizarea parametrilor clasificatorului LogisticRegression
 grid = {"C":np.logspace(-3, 3, 7), "penalty": ["l1", "l2"]}
 logreg = LogisticRegression()
 logreg_cv = GridSearchCV(logreg, grid, cv=10)
